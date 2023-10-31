@@ -1,8 +1,12 @@
 import org.openkinect.processing.*;
 import themidibus.*;
+import java.io.PrintWriter;
+import controlP5.*;
 
 Kinect2 kinect2;
 MidiBus mb;
+PrintWriter outputFile;
+ControlP5 cp5;
 
 int channel = 1;
 int pitch = 50;
@@ -49,7 +53,7 @@ int idleSpeed = 100;
 int idleFrames = 20;
 
 // define room Depth
-int roomDepth = 4000;
+int roomDepth;
 int maxDepth = 8000;
 
 boolean menu = true;
@@ -70,10 +74,23 @@ int threshold = 5 ;
 
 void setup() {
 
-  xStart = 200;
-  xEnd = 512-100;
-  yStart = 100;
-  yEnd = 424-100;
+  // Check if the file exists and load values if it does
+  String[] lines = loadStrings("savedValues.txt");
+  if (lines.length >= 5) {
+    println("FOUND DATA FILE");
+    xStart = int(split(lines[0], ':')[1].trim());
+    xEnd = int(split(lines[1], ':')[1].trim());
+    yStart = int(split(lines[2], ':')[1].trim());
+    yEnd = int(split(lines[3], ':')[1].trim());
+    roomDepth = int(split(lines[4], ':')[1].trim());
+  } else {
+    println("DID NOT FIND DATA FILE, RESET VALUES");
+    xStart = 100;
+    xEnd = 512-100;
+    yStart = 100;
+    yEnd = 424-100;
+    roomDepth = 4000;
+  }
 
   // initialize all the readings to 0:
   for (int thisReading = 0; thisReading < numReadings; thisReading++) {
@@ -274,4 +291,19 @@ void keyPressed() {
       menu = !menu;  // Toggle the state
     }
   }
+}
+
+
+void saveValuesToFile() {
+  // Open a file for writing
+  outputFile = createWriter("savedValues.txt");
+
+  // Save xStart, xEnd, yStart, and yEnd to the text file
+  outputFile.println("xStart: " + xStart);
+  outputFile.println("xEnd: " + xEnd);
+  outputFile.println("yStart: " + yStart);
+  outputFile.println("yEnd: " + yEnd);
+  outputFile.println("roomDepth: " + roomDepth);
+  outputFile.flush();
+  println("SAVED VALUES TO FILE");
 }
