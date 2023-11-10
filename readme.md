@@ -15,14 +15,16 @@ Ordner öffnen:  ./Documents/Processing/libraries
 Resolume -> Einstellungen -> OSC
 Input aktivieren und Port auf 7000
 
-![[./assets/Screenshot 2023-11-10 at 12.58.47.png]]
+![OSC Settings](./assets/Screenshot%202023-11-10%20at%2012.58.47.png)
+
+
 
 # Midi Input Einstellen
 ## Mac
 MIDI Studio öffnen
 IAC Driver einrichten und aktivieren
 
-![[./assets/Screenshot 2023-11-10 at 13.00.11.png]]
+![MIDI Settings](./assets/Screenshot%202023-11-10%20at%2013.00.11.png)
 
 ## Make java work on Mac
 
