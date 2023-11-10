@@ -7,8 +7,13 @@ https://www.resolume.com/download/
 
 # Processing Libraries kopieren
 ## Mac
-Ordner öffnen:  ./Documents/Processing/libraries
+Download libraries.zip
+https://github.com/kjellxvx/berge-animation/blob/main/libraries.zip
 
+Unpack libraries.zip
+Paste content of libarbies in folder:
+
+./Documents/Processing/libraries
 
 
 # OSC Input Einrichten
@@ -21,28 +26,22 @@ Input aktivieren und Port auf 7000
 
 # Midi Input Einstellen
 ## Mac
+~~Download CoreMidi4J~~
+~~https://github.com/DerekCook/CoreMidi4J/releases~~
+~~copy .jar file in Processing/libaries/themidibus/library~~
+
 MIDI Studio öffnen
 IAC Driver einrichten und aktivieren
-
 ![MIDI Settings](./assets/Screenshot%202023-11-10%20at%2013.00.11.png)
 
-## Make java work on Mac
 
-  
-
+# Make java work on Mac
 Applications -> Processing -> show packages
-
 Contents -> Java
+Copy jna-platform.jar and jna.jar from Java to /core/library
 
-Copy jna-platform.jar and jna.jar to core -> library
 
-  
 
-## Make Midi work on Mac
-
-Download CoreMidi4J
-
-https://github.com/DerekCook/CoreMidi4J/releases
 
   
 
