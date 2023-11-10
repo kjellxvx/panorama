@@ -147,7 +147,7 @@ class secondSketch extends PApplet {
                 secondSketch.loop();// Start the second sketch
                 secondSketch.getSurface().setVisible(true);
             }
-            menu = menu;  // Toggle the state
+            menu = !menu;  // Toggle the state
         };
         
         if (keyz[1] == true) {

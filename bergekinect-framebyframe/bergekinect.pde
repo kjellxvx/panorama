@@ -50,7 +50,7 @@ boolean introAnimation = false;
 float position=0;
 
 int idleSpeed = 100;
-int idleFrames = 20;
+int idleFrames = 24;
 
 // define room Depth
 int roomDepth;
@@ -187,14 +187,22 @@ void draw() {
         println("INTRO 3 PLAYING");
         current = count(current, startIntro3, EndIntro3);
       }
+      if (intros == 3) {
+        println("INTRO 4 PLAYING");
+        current = count(current, startIntro4, EndIntro4);
+      }
+      if (intros == 4) {
+        println("INTRO 5 PLAYING");
+        current = count(current, startIntro5, EndIntro5);
+      }
 
       displayImage(current, 0);
 
-      if (current == EndIntro1 || current == EndIntro2 || current == EndIntro3) {
+      if (current == EndIntro1 || current == EndIntro2 || current == EndIntro3 || current == EndIntro4 ||current == EndIntro5) {
         main = true;
         //println("now a new animation could start");
         intros++;
-        if (intros>=3) {
+        if (intros>=5) {
           intros=0;
         }
       }
