@@ -3,8 +3,8 @@
 Download & Install Resolume Avenue  
 https://www.resolume.com/download/  
 
-Download and unpack the Application
-[https://github.com/kjellxvx/berge-animation/blob/main/bergekinectResolume/builds/bergekinectResolume_v1.0.zip](https://github.com/kjellxvx/berge-animation/raw/main/bergekinectResolume/builds/bergekinectResolume_v1.0.zip?download=)
+Download and unpack the Application  
+[Download ⬇️](https://github.com/kjellxvx/berge-animation/raw/main/bergekinectResolume/builds/bergekinectResolume_v1.0.zip?download=)
 
 ## Create new Resolume project  
 
