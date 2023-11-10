@@ -15,16 +15,19 @@ Paste content of libarbies in folder:
 
 ./Documents/Processing/libraries
 
+# Create new Resolume project
 
-# OSC Input Einrichten
+## activate OSC Input 
 Resolume -> Einstellungen -> OSC
 Input aktivieren und Port auf 7000
 
-![OSC Settings](./assets/Screenshot%202023-11-10%20at%2012.58.47.png)
+![OSC Settings](./assets/OSC-setup.png)
+
+## Add video to Resolume Timeline
+![OSC Settings](./assets/resolume-timeline.png)
 
 
-
-# Midi Input Einstellen
+# set up Midi Input
 ## Mac
 ~~Download CoreMidi4J~~
 ~~https://github.com/DerekCook/CoreMidi4J/releases~~
@@ -32,7 +35,8 @@ Input aktivieren und Port auf 7000
 
 MIDI Studio öffnen
 IAC Driver einrichten und aktivieren
-![MIDI Settings](./assets/Screenshot%202023-11-10%20at%2013.00.11.png)
+![MIDI Settings](./assets/midi-studio.png)
+
 
 
 # Make java work on Mac
