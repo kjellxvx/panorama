@@ -14,8 +14,7 @@ Input active and Port 7000
 ### Add video to Resolume Timeline  
 ![Resolume_Timeline](./assets/resolume-timeline.png)  
 
-### Midi Input  
-#### Mac  
+### Midi Input MacOs  
 open MIDI Studio  
 add IAC Driver  
 
