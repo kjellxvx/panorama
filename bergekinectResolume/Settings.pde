@@ -4,27 +4,55 @@ PrintWriter outputFile;
 
 
 void loadSettings() {
-
-  // Check if the file exists and load values if it does
-  String[] lines = loadStrings("savedValues.txt");
-  if (lines.length >= 5) {
-    println("FOUND DATA FILE");
-    xStart = int(split(lines[0], ':')[1].trim());
-    xEnd = int(split(lines[1], ':')[1].trim());
-    yStart = int(split(lines[2], ':')[1].trim());
-    yEnd = int(split(lines[3], ':')[1].trim());
-    roomDepth = int(split(lines[4], ':')[1].trim());
+  // Check if the file exists
+  File file = new File(sketchPath("savedValues.txt"));
+  
+  if (file.exists()) {
+    // Load values if the file exists
+    String[] lines = loadStrings("savedValues.txt");
+    if (lines.length >= 5) {
+      println("FOUND DATA FILE");
+      xStart = int(split(lines[0], ':')[1].trim());
+      xEnd = int(split(lines[1], ':')[1].trim());
+      yStart = int(split(lines[2], ':')[1].trim());
+      yEnd = int(split(lines[3], ':')[1].trim());
+      roomDepth = int(split(lines[4], ':')[1].trim());
+    } else {
+      println("INVALID DATA FILE, RESET VALUES");
+      setDefaultValues();
+    }
   } else {
-    println("DID NOT FIND DATA FILE, RESET VALUES");
-    xStart = 100;
-    xEnd = 512-100;
-    yStart = 100;
-    yEnd = 424-100;
-    roomDepth = 4000;
+    // Create the file and write default values
+    println("DATA FILE NOT FOUND, CREATING AND WRITING DEFAULT VALUES");
+    setDefaultValues();
+    saveValuesToFile();
   }
 
   println("THE ROOM:" + roomDepth);
 }
+
+void setDefaultValues() {
+  xStart = 100;
+  xEnd = 512 - 100;
+  yStart = 100;
+  yEnd = 424 - 100;
+  roomDepth = 4000;
+}
+
+void saveValuesToFile() {
+  // Open a file for writing
+  outputFile = createWriter("savedValues.txt");
+  // Save xStart, xEnd, yStart, and yEnd to the text file
+  outputFile.println("xStart: " + xStart);
+  outputFile.println("xEnd: " + xEnd);
+  outputFile.println("yStart: " + yStart);
+  outputFile.println("yEnd: " + yEnd);
+  outputFile.println("roomDepth: " + roomDepth);
+  outputFile.flush();
+  outputFile.close();
+  println("SAVED VALUES TO FILE");
+}
+
 
 
 void keyPressed() {
@@ -49,18 +77,4 @@ void keyReleased() {
   if (keyCode == RIGHT) keyz[6] = false;
   if (keyCode == UP)  keyz[7] = false;
   if (keyCode == DOWN) keyz[8] = false;
-}
-
-
-void saveValuesToFile() {
-  // Open a file for writing
-  outputFile = createWriter("savedValues.txt");
-  // Save xStart, xEnd, yStart, and yEnd to the text file
-  outputFile.println("xStart: " + xStart);
-  outputFile.println("xEnd: " + xEnd);
-  outputFile.println("yStart: " + yStart);
-  outputFile.println("yEnd: " + yEnd);
-  outputFile.println("roomDepth: " + roomDepth);
-  outputFile.flush();
-  println("SAVED VALUES TO FILE");
 }
