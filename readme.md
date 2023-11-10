@@ -1,35 +1,32 @@
+# Run precompiled App  
 
+Download & Install Resolume Avenue  
+https://www.resolume.com/download/  
 
-# Run precompiled App
+# Create new Resolume project  
 
-Download & Install Resolume Avenue
-https://www.resolume.com/download/
+## activate OSC Input   
+Resolume -> Einstellungen -> OSC  
+Input aktivieren und Port auf 7000  
 
-# Create new Resolume project
+![OSC Settings](./assets/OSC-setup.png)  
 
-## activate OSC Input 
-Resolume -> Einstellungen -> OSC
-Input aktivieren und Port auf 7000
+## Add video to Resolume Timeline  
+![Resolume_Timeline](./assets/resolume-timeline.png)  
 
-![OSC Settings](./assets/OSC-setup.png)
+## set up Midi Input  
+### Mac  
 
-## Add video to Resolume Timeline
-![Resolume_Timeline](./assets/resolume-timeline.png)
+MIDI Studio öffnen  
+ 
+IAC Driver einrichten und aktivieren  
 
-## set up Midi Input
-### Mac
+![MIDI Settings](./assets/midi-studio.png)  
 
-MIDI Studio öffnen
+## Start Application  
+chose MacOs or Windows  
 
-IAC Driver einrichten und aktivieren
-
-![MIDI Settings](./assets/midi-studio.png)
-
-## Start Application
-chose MacOs or Windows
-
-open Folder, execute bergekinectResolume
-
+open Folder, execute bergekinectResolume  
 
 
 
@@ -38,29 +35,27 @@ open Folder, execute bergekinectResolume
 
 
 
+# Build using Processing  
 
+## Processing Libraries kopieren  
+Download libraries.zip  
+https://github.com/kjellxvx/berge-animation/blob/main/libraries.zip  
 
-# Build using Processing
+Unpack libraries.zip  
+Paste content of libarbies in folder:  
 
-## Processing Libraries kopieren
-Download libraries.zip
-https://github.com/kjellxvx/berge-animation/blob/main/libraries.zip
+./Documents/Processing/libraries  
 
-Unpack libraries.zip
-Paste content of libarbies in folder:
+## set up Midi Input  
+### Mac  
+~~Download CoreMidi4J~~  
+~~https://github.com/DerekCook/CoreMidi4J/releases~~  
+~~copy .jar file in Processing/libaries/themidibus/library~~  
 
-./Documents/Processing/libraries
-
-## set up Midi Input
-### Mac
-~~Download CoreMidi4J~~
-~~https://github.com/DerekCook/CoreMidi4J/releases~~
-~~copy .jar file in Processing/libaries/themidibus/library~~
-
-### Make java work on Mac
-Applications -> Processing -> show packages
-Contents -> Java
-Copy jna-platform.jar and jna.jar from Java to /core/library
+### Make java work on Mac  
+Applications -> Processing -> show packages  
+Contents -> Java  
+Copy jna-platform.jar and jna.jar from Java to /core/library  
 
 
 
