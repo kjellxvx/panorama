@@ -3,19 +3,22 @@
 Download & Install Resolume Avenue  
 https://www.resolume.com/download/  
 
-# Create new Resolume project  
+Download and unpack the Application
+https://github.com/kjellxvx/berge-animation/blob/main/bergekinectResolume/builds/bergekinectResolume_v1.0.zip
 
-## activate OSC Input   
+## Create new Resolume project  
+
+### activate OSC Input   
 Resolume -> Einstellungen -> OSC  
 Input aktivieren und Port auf 7000  
 
 ![OSC Settings](./assets/OSC-setup.png)  
 
-## Add video to Resolume Timeline  
+### Add video to Resolume Timeline  
 ![Resolume_Timeline](./assets/resolume-timeline.png)  
 
-## set up Midi Input  
-### Mac  
+### set up Midi Input  
+#### Mac  
 
 MIDI Studio öffnen  
  
@@ -23,7 +26,7 @@ IAC Driver einrichten und aktivieren
 
 ![MIDI Settings](./assets/midi-studio.png)  
 
-## Start Application  
+### Start Application  
 chose MacOs or Windows  
 
 open Folder, execute bergekinectResolume  
