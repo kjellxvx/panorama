@@ -1,44 +1,61 @@
-  
-Download & Install Processing 4.3
-https://processing.org/download
+# Run precompiled App  
 
-Download & Install Resolume Avenue
-https://www.resolume.com/download/
+Download & Install Resolume Avenue  
+https://www.resolume.com/download/  
 
-# Processing Libraries kopieren
-## Mac
-Download libraries.zip
-https://github.com/kjellxvx/berge-animation/blob/main/libraries.zip
+# Create new Resolume project  
 
-Unpack libraries.zip
-Paste content of libarbies in folder:
+## activate OSC Input   
+Resolume -> Einstellungen -> OSC  
+Input aktivieren und Port auf 7000  
 
-./Documents/Processing/libraries
+![OSC Settings](./assets/OSC-setup.png)  
 
+## Add video to Resolume Timeline  
+![Resolume_Timeline](./assets/resolume-timeline.png)  
 
-# OSC Input Einrichten
-Resolume -> Einstellungen -> OSC
-Input aktivieren und Port auf 7000
+## set up Midi Input  
+### Mac  
 
-![OSC Settings](./assets/Screenshot%202023-11-10%20at%2012.58.47.png)
+MIDI Studio öffnen  
+ 
+IAC Driver einrichten und aktivieren  
 
+![MIDI Settings](./assets/midi-studio.png)  
 
+## Start Application  
+chose MacOs or Windows  
 
-# Midi Input Einstellen
-## Mac
-~~Download CoreMidi4J~~
-~~https://github.com/DerekCook/CoreMidi4J/releases~~
-~~copy .jar file in Processing/libaries/themidibus/library~~
-
-MIDI Studio öffnen
-IAC Driver einrichten und aktivieren
-![MIDI Settings](./assets/Screenshot%202023-11-10%20at%2013.00.11.png)
+open Folder, execute bergekinectResolume  
 
 
-# Make java work on Mac
-Applications -> Processing -> show packages
-Contents -> Java
-Copy jna-platform.jar and jna.jar from Java to /core/library
+
+
+
+
+
+
+# Build using Processing  
+
+## Processing Libraries kopieren  
+Download libraries.zip  
+https://github.com/kjellxvx/berge-animation/blob/main/libraries.zip  
+
+Unpack libraries.zip  
+Paste content of libarbies in folder:  
+
+./Documents/Processing/libraries  
+
+## set up Midi Input  
+### Mac  
+~~Download CoreMidi4J~~  
+~~https://github.com/DerekCook/CoreMidi4J/releases~~  
+~~copy .jar file in Processing/libaries/themidibus/library~~  
+
+### Make java work on Mac  
+Applications -> Processing -> show packages  
+Contents -> Java  
+Copy jna-platform.jar and jna.jar from Java to /core/library  
 
 
 
