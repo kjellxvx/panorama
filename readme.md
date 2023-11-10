@@ -18,13 +18,27 @@ Input aktivieren und Port auf 7000
 
 ## set up Midi Input
 ### Mac
+
 MIDI Studio öffnen
+
 IAC Driver einrichten und aktivieren
+
 ![MIDI Settings](./assets/midi-studio.png)
 
 ## Start Application
 chose MacOs or Windows
+
 open Folder, execute bergekinectResolume
+
+
+
+
+
+
+
+
+
+
 
 # Build using Processing
 
