@@ -15,12 +15,12 @@ void initUi() {
     closestValueSlider = cp5.addSlider("closestValue")
       .setPosition(10, 600)
       .setSize(400, 20)
-      .setRange(minDepth, 4000) // Initially set a default range
+      .setRange(4000, minDepth) // Initially set a default range
       .setLabel("Closest Value");
   } else {
     roomDepthSlider = cp5.addSlider("roomDepth")
       .setPosition(10, 600)
-      .setSize(400, 20)
+      .setSize(wW-20, 20)
       .setRange(minDepth, 4000)
       .setLabel("Room Depth")
       .setValue(4000);
@@ -59,18 +59,23 @@ void drawMenu() {
   fill(0, 0, 0);
   textSize(20);
   text("Animation:", 20, wH + 100);
+
+
   if (main == false ) {
     if (nearStart == false) {
       text("Intro", 120, wH + 100);
       text(intros+1, 170, wH + 100);
     }
   }
-  if (nearStart == true) {
-    text("Outro", 120, wH + 100);
-  }
-  if (main == true ) {
+  if (videoPos > 1 && main && !nearStart) {
     text("Main", 120, wH + 100);
+  } else {
+    if (nearStart) {
+      text("Outro", 120, wH + 100);
+    }
   }
+
+
   stroke(0);
   fill(255, 0, 0);
   textSize(20);
@@ -79,6 +84,21 @@ void drawMenu() {
   }
   if (nearEnd == true) {
     text("nearEnd", 400, 530);
+  }
+
+
+  if (testMode== true) {
+    strokeWeight(1);
+    stroke(255, 0, 0);
+    line(10, 580, 10, 600);
+    fill(255, 0, 0);
+    textSize(20);
+    text("Intros", 20, 595);
+    line(116, 580, 116, 600);
+    text("Main", 126, 595);
+    line(405, 580, 405, 600);
+    text("Outro", 420, 595);
+    line(409, 580, 409, 600);
   }
 
   stroke(0);
@@ -102,7 +122,11 @@ void drawMenu() {
   rect(leftRectWidth, 0, xEnd - xStart + 1, topRectHeight); // Top
   rect(leftRectWidth, bottomRectY + 1, xEnd - xStart + 1, bottomRectHeight); // Bottom
 
-  stroke(0, 0, 255);
+
+
+
+
+  stroke(255, 0, 0);
   strokeWeight(3);
 
   if (selected == "left") {
@@ -137,7 +161,6 @@ void checkKeys() {
   if (keyz[0] == true) {
     println("save");
     saveValuesToFile();
-    menu = !menu;
   };
 
   if (keyz[1] == true) {

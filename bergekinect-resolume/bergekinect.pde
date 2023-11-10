@@ -1,3 +1,16 @@
+//########################################################################
+//########################################################################
+//########################################################################
+//########################################################################
+
+boolean testMode = true;
+
+//########################################################################
+//########################################################################
+//########################################################################
+//########################################################################
+
+
 boolean keyz[] = new boolean[9];
 int wW = 512;
 int wH = 424;
@@ -5,7 +18,6 @@ int current = 0;
 int intros = 0;
 boolean main = true;
 boolean finishIntro = false;
-boolean testMode = false;
 
 PImage img;
 
@@ -33,8 +45,6 @@ int roomDepth;
 int maxDepth = 8000;
 int minDepth= 497;
 
-boolean menu = true;
-
 // For smoothing the values
 int numReadings = 10;
 int[] readings = new int[numReadings];
@@ -58,7 +68,7 @@ void setup() {
   initUi();
 
   img = createImage(kinect2.depthWidth, kinect2.depthHeight, RGB);
-  size(wW, wH + 200);
+  size(512, 424 + 200);
   frameRate(30);
   current = frames-idleFrames;
 
@@ -112,6 +122,7 @@ void draw() {
     if (nearStart) {
       println("TOO CLOSE ANIMATION PLAYING");
       float zigZag = idle(idleSpeed, frames - idleFrames, frames);
+      videoPos = int(zigZag);
       sendOsc(int(zigZag));
     }
   }
@@ -120,25 +131,30 @@ void draw() {
     main = false;
     finishIntro = true;
     if (intros == 0) {
-      println("INTRO 1 PLAYING");
       current = count(current, startIntro1, EndIntro1);
+      videoPos = current;
+      println(current);
     }
     if (intros == 1) {
-      println("INTRO 2 PLAYING");
       current = count(current, startIntro2, EndIntro2);
+      videoPos = current;
+      println(current);
     }
 
     if (intros == 2) {
-      println("INTRO 3 PLAYING");
       current = count(current, startIntro3, EndIntro3);
+      videoPos = current;
+      println(current);
     }
     if (intros == 3) {
-      println("INTRO 4 PLAYING");
       current = count(current, startIntro4, EndIntro4);
+      videoPos = current;
+      println(current);
     }
     if (intros == 4) {
-      println("INTRO 5 PLAYING");
       current = count(current, startIntro5, EndIntro5);
+      videoPos = current;
+      println(current);
     }
 
     sendOsc(current);
