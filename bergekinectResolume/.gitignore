@@ -8,6 +8,6 @@ Anna_HD_01894.mov
 **/.DS_Store
 *.vscode
 sketch.properties
-/macos-x86_64
-/windows-amd64
-/linux-amd64
+*/macos-x86_64
+*/windows-amd64
+*/linux-amd64
