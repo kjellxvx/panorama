@@ -80,10 +80,10 @@ void drawMenu() {
   fill(255, 0, 0);
   textSize(20);
   if (nearStart == true) {
-    text("nearStart", 400, 530);
+    text("User very close", 300, 530);
   }
   if (nearEnd == true) {
-    text("nearEnd", 400, 530);
+    text("User leaving", 300, 530);
   }
 
 

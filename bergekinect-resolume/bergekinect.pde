@@ -115,12 +115,10 @@ void draw() {
   }
 
   if (videoPos > 1 && main && !nearStart) {
-    println("MAIN ANIMATION PLAYING");
     finishIntro = false;
     sendOsc(videoPos);
   } else {
     if (nearStart) {
-      println("TOO CLOSE ANIMATION PLAYING");
       float zigZag = idle(idleSpeed, frames - idleFrames, frames);
       videoPos = int(zigZag);
       sendOsc(int(zigZag));
@@ -133,28 +131,23 @@ void draw() {
     if (intros == 0) {
       current = count(current, startIntro1, EndIntro1);
       videoPos = current;
-      println(current);
     }
     if (intros == 1) {
       current = count(current, startIntro2, EndIntro2);
       videoPos = current;
-      println(current);
     }
 
     if (intros == 2) {
       current = count(current, startIntro3, EndIntro3);
       videoPos = current;
-      println(current);
     }
     if (intros == 3) {
       current = count(current, startIntro4, EndIntro4);
       videoPos = current;
-      println(current);
     }
     if (intros == 4) {
       current = count(current, startIntro5, EndIntro5);
       videoPos = current;
-      println(current);
     }
 
     sendOsc(current);
