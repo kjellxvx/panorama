@@ -24,7 +24,7 @@ Input aktivieren und Port auf 7000
 ![OSC Settings](./assets/OSC-setup.png)
 
 ## Add video to Resolume Timeline
-![OSC Settings](./assets/resolume-timeline.png)
+![Resolume_Timeline](./assets/resolume-timeline.png)
 
 
 # set up Midi Input
@@ -36,7 +36,6 @@ Input aktivieren und Port auf 7000
 MIDI Studio öffnen
 IAC Driver einrichten und aktivieren
 ![MIDI Settings](./assets/midi-studio.png)
-
 
 
 # Make java work on Mac
