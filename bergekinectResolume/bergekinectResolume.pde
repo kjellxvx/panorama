@@ -96,8 +96,7 @@ void draw() {
       mb.sendNoteOn(channel, pitch, sound);
     } else {
       videoPos = int(map(average, roomDepth, minDepth, 0, frames));
-      sound = int(map(average, roomDepth, minDepth, 0, 127));
-      mb.sendNoteOn(channel, pitch, sound);
+      triggerNote();
       checkDirection(average);
     }
   }

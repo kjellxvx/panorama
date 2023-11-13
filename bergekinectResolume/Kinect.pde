@@ -14,8 +14,6 @@ void initKinect() {
   kinect2.initDevice();
 }
 
-
-
 void getDepth() {
   closestValue = maxDepth;
   int [] depth = kinect2.getRawDepth();
