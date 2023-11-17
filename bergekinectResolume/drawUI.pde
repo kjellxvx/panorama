@@ -3,12 +3,24 @@ ControlP5 cp5;
 
 Slider closestValueSlider;
 Slider roomDepthSlider;
+CheckBox speedCheckbox;
 
 int statsHeight = 200;
 String selected = "none";
+boolean useSpeed = false;
 
 void initUi() {
   cp5 = new ControlP5(this);
+
+
+  speedCheckbox = cp5.addCheckBox("checkBox")
+    .setPosition(390, wH +80)
+    .setSize(10, 10)
+    .addItem("track speed", 0);
+
+  speedCheckbox.setColorLabel(color(0)); // Set the text color to white
+
+
   // Setup sliders based on testMode
   if (testMode == true) {
     roomDepth = 4000;
@@ -50,10 +62,18 @@ void drawMenu() {
   textSize(20);
   text("Frame", 280, wH + 65);
   fill(0, 255, 255);
-  textSize(50);
-  text(sound, 410, wH + 45);
   textSize(20);
-  text("MIDI", 410, wH + 65);
+  text(channel, 390, wH + 25);
+  text("Channel", 435, wH + 25);
+  text(pitch, 390, wH + 50);
+  text("Pitch", 435, wH + 50);
+  text(velocity, 390, wH + 75);
+  text("Velocity", 435, wH + 75);
+
+  //textSize(50);
+  //text(pitch, 410, wH + 45);
+  //textSize(20);
+
 
 
   fill(0, 0, 0);
@@ -94,8 +114,8 @@ void drawMenu() {
     fill(255, 0, 0);
     textSize(20);
     text("Intros", 20, 595);
-    line(116, 580, 116, 600);
-    text("Main", 126, 595);
+    line(150, 580, 150, 600);
+    text("Main", 155, 595);
     line(405, 580, 405, 600);
     text("Outro", 420, 595);
     line(409, 580, 409, 600);
@@ -202,5 +222,9 @@ void controlEvent(ControlEvent theEvent) {
   }
   if (theEvent.isFrom("closestValue")) {
     closestValue = int(theEvent.getController().getValue());
+    calculateSpeed();
+  }
+  if (theEvent.isFrom("checkBox")) {
+    useSpeed = speedCheckbox.getState(0);
   }
 }

@@ -69,7 +69,7 @@ void setup() {
 
   img = createImage(kinect2.depthWidth, kinect2.depthHeight, RGB);
   size(512, 424 + 200);
-  frameRate(30);
+  frameRate(12);
   current = frames-idleFrames;
 
   /*
@@ -118,9 +118,10 @@ void draw() {
     sendOsc(videoPos);
   } else {
     if (nearStart) {
-      float zigZag = idle(idleSpeed, frames - idleFrames, frames);
-      videoPos = int(zigZag);
-      sendOsc(int(zigZag));
+      // idle function
+      current = count(current, frames - idleFrames+1, frames);
+      videoPos = int(current);
+      sendOsc(int(current));
     }
   }
 
@@ -186,14 +187,15 @@ void smooth(int sum) {
   average = total / numReadings;
 }
 
+/*
 // function to idle first and last few frames
-float idle(int speed, int start, int end ) {
-  position+=speed;
-  float oscillation = (sin(position/100.0)+1)/2;
-  float value = start + (end-start)*oscillation;
-  //println(int(value));
-  return int(value);
-}
+ float idle(int speed, int start, int end ) {
+ position+=speed;
+ float oscillation = (sin(position/100.0)+1)/2;
+ float value = start + (end-start)*oscillation;
+ //println(int(value));
+ return int(value);
+ }*/
 
 void checkDirection(int currentValue) {
   if (abs(currentValue - prevValue) > threshold) {

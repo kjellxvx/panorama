@@ -1,6 +1,12 @@
 import org.openkinect.processing.*;
 Kinect2 kinect2;
 
+
+float prevAverage = 0;
+long prevTime = 0;
+int speed = 0;
+float maxAllowedSpeed = 0.5;
+
 // Define blur kernel
 float[][] kernel ={
   { 0.0625, 0.125, 0.0625},
@@ -44,6 +50,7 @@ void getDepth() {
           closestValue = sum;
           closestX=x;
           closestY=y;
+          calculateSpeed();
         }
         // if not make the pixels white
       } else {
@@ -51,4 +58,37 @@ void getDepth() {
       }
     }
   }
+}
+
+
+void calculateSpeed() {
+  long currentTime = millis(); // Get the current time in milliseconds
+
+  // Calculate the time difference
+  long deltaTime = currentTime - prevTime;
+
+  // Check if deltaTime is greater than 0 to avoid division by zero
+  if (deltaTime > 0) {
+    // Calculate the depth difference
+    float depthDifference = abs(average - prevAverage);
+
+    if (depthDifference >=1) {
+      float rawSpeed = depthDifference / deltaTime;
+
+      if (rawSpeed <= maxAllowedSpeed) {
+        speed = round(map(rawSpeed, 0, maxAllowedSpeed, 0, 127));
+      } else {
+        speed = 127;
+      }
+
+      if (useSpeed) {
+        velocity = speed;
+        //println(speed);
+      }
+    }
+  }
+
+  // Update the previous values
+  prevAverage = average;
+  prevTime = currentTime;
 }

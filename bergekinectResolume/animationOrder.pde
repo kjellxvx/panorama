@@ -1,5 +1,5 @@
 // define number of frames (number of files -1)
-int frames = 1894;
+int frames = 1414;
 
 int lenghtIntro1 = 120;
 int lenghtIntro2 = 92;
@@ -7,7 +7,7 @@ int lenghtIntro3 = 93;
 int lenghtIntro4 = 96;
 int lenghtIntro5 = 99;
 
-int idleSpeed = 30;
+int idleSpeed = 12;
 int idleFrames = 24;
 
 int introLength = lenghtIntro1+lenghtIntro2+lenghtIntro3+lenghtIntro4+lenghtIntro5;
