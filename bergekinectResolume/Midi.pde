@@ -2,10 +2,30 @@ import themidibus.*;
 MidiBus mb;
 
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 // Define your mapping of videoPos range to note
-HashMap<Range, Integer> videoPosToNote = new HashMap<Range, Integer>();
-HashMap<Range, Boolean> noteTriggered = new HashMap<Range, Boolean>();
+HashMap<Range, MidiParameters> videoPosToMidi = new HashMap<>();
+HashMap<String, Boolean> activeNotes = new HashMap<>();
+HashMap<String, Boolean> noteActive = new HashMap<>();
+HashMap<String, Long> lastNoteTriggerTime = new HashMap<>();
+
+class MidiParameters {
+  int channel;
+  int pitch;
+  int velocity;
+  boolean rewind;
+  long lastNoteTriggerTime;
+
+  MidiParameters(int channel, int pitch, int velocity, boolean rewind) {
+    this.channel = channel;
+    this.pitch = pitch;
+    this.velocity = velocity;
+    this.rewind = rewind;
+    this.lastNoteTriggerTime = 0;
+  }
+}
 
 class Range {
   int start;
@@ -23,61 +43,146 @@ class Range {
 
 int channel = 0;
 int pitch = 0;
-int velocity = 127;
+int velocity = 60;
+int frameRange = 3;
 
-// Define a variable to store the timestamp of the last note trigger
-long lastNoteTriggerTime = 0;
-// Define a variable for the note duration in milliseconds
-int noteDuration = 100; // Adjust the duration as needed
+
+int prevVideoPos = -1;
+
+int noteTimeout = 50; // Timeout duration in milliseconds
 
 void initMidi() {
-  MidiBus.list();
-  mb = new MidiBus(this, -1, "CoreMIDI4J - IAC Driver");
-  mb.sendTimestamps(false);
-  videoPosToNote.put(new Range(558, 607), 1); // 0558 – 0607 - Blätterrascheln
-  videoPosToNote.put(new Range(686, 1320), 2); // 0686 – 1320 - Berge Wachsen
-  videoPosToNote.put(new Range(807, 812), 3); // 0807 - Berge drücken gegen die Daumen
-  videoPosToNote.put(new Range(884, 889), 4); // 0884 - Ringfinger treffen aufeinander
-  videoPosToNote.put(new Range(950, 955), 5); // 0950 - Mittelfinger rutsch vom Berg ab
-  videoPosToNote.put(new Range(1033, 1038), 6); // 1033 - Berg in der Mitte kommt in den Vordergrund
-  videoPosToNote.put(new Range(1107, 1112), 7); // 1107 - Übergang Berg Mitte Rechts von Zeigefinger auf Mittelfinger
-  videoPosToNote.put(new Range(1156, 1161), 8); // 1156  - Berg Links Riss fängt an
-  videoPosToNote.put(new Range(1215, 1216), 9); // 1215 - Berg Rechts oben Riss fängt an
-  videoPosToNote.put(new Range(1216, 1221), 10); // 1216 - Berg Links Riss spaltet sich ab
-  videoPosToNote.put(new Range(1229, 1234), 11); // 1229 - Daumen Links drückt auf den kleinen Berg
-  videoPosToNote.put(new Range(1260, 1265), 12); // 1260 - Berg Rechts oben Riss spaltet sich ab
-  videoPosToNote.put(new Range(1266, 1271), 13); // 1266 - Mittelfinger Rechts rutsch auf Berg ab
-  videoPosToNote.put(new Range(1279, 1284), 14); // 1279 - kleiner Berg flutscht wieder zurück
-  videoPosToNote.put(new Range(1310, 135), 15); // 1310 - Öffnung der Hände geht los
-  videoPosToNote.put(new Range(1351, 1356), 16); // 1351 - Berg Links klappt wieder zu
+  try {
+    MidiBus.list();
+    mb = new MidiBus(this, -1, "CoreMIDI4J - IAC Driver");
+    mb.sendTimestamps(false);
 
-  // Initialize noteTriggered map with all ranges set to false
-  for (Range range : videoPosToNote.keySet()) {
-    noteTriggered.put(range, false);
+
+    //Channel 1
+    videoPosToMidi.put(new Range(536, 536+frameRange), new MidiParameters(1, 60, 60, false));
+    videoPosToMidi.put(new Range(548, 548+frameRange), new MidiParameters(1, 61, 60, false));
+    videoPosToMidi.put(new Range(562, 562+frameRange), new MidiParameters(1, 62, 60, false));
+    videoPosToMidi.put(new Range(583, 583+frameRange), new MidiParameters(1, 63, 60, false));
+    videoPosToMidi.put(new Range(615, 615+frameRange), new MidiParameters(1, 64, 60, false));
+    videoPosToMidi.put(new Range(674, 674+frameRange), new MidiParameters(1, 65, 60, false));
+    videoPosToMidi.put(new Range(774, 774+frameRange), new MidiParameters(1, 66, 60, false));
+    videoPosToMidi.put(new Range(826, 826+frameRange), new MidiParameters(1, 67, 60, false));
+    videoPosToMidi.put(new Range(898, 898+frameRange), new MidiParameters(1, 68, 60, false));
+
+    //Channel 2
+    videoPosToMidi.put(new Range(535, 535+frameRange), new MidiParameters(2, 60, 60, false));
+    videoPosToMidi.put(new Range(585, 585+frameRange), new MidiParameters(2, 61, 60, false));
+    videoPosToMidi.put(new Range(613, 613+frameRange), new MidiParameters(2, 62, 60, false));
+    videoPosToMidi.put(new Range(676, 676+frameRange), new MidiParameters(2, 63, 60, false));
+    videoPosToMidi.put(new Range(778, 778+frameRange), new MidiParameters(2, 64, 60, false));
+    videoPosToMidi.put(new Range(911, 911+frameRange), new MidiParameters(2, 65, 60, false));
+    videoPosToMidi.put(new Range(1167, 1167+frameRange), new MidiParameters(2, 66, 60, false));
+    videoPosToMidi.put(new Range(1073, 1073+frameRange), new MidiParameters(2, 67, 60, false));
+
+    //Channel 3
+    videoPosToMidi.put(new Range(555, 555+frameRange), new MidiParameters(3, 60, 60, false));
+    videoPosToMidi.put(new Range(711, 711+frameRange), new MidiParameters(3, 61, 60, false));
+    videoPosToMidi.put(new Range(838, 838+frameRange), new MidiParameters(3, 62, 60, false));
+    videoPosToMidi.put(new Range(967, 967+frameRange), new MidiParameters(3, 63, 60, false));
+    videoPosToMidi.put(new Range(1090, 1090+frameRange), new MidiParameters(3, 64, 60, false));
+    videoPosToMidi.put(new Range(1267, 1267+frameRange), new MidiParameters(3, 65, 60, false));
+
+    //Channel 4
+    videoPosToMidi.put(new Range(752, 752+frameRange), new MidiParameters(4, 60, 60, false));
+    videoPosToMidi.put(new Range(1091, 1091+frameRange), new MidiParameters(4, 61, 60, false));
+
+    //Channel 5
+    videoPosToMidi.put(new Range(536, 536+frameRange), new MidiParameters(5, 60, 60, false));
+    videoPosToMidi.put(new Range(708, 708+frameRange), new MidiParameters(5, 61, 60, false));
+    videoPosToMidi.put(new Range(842, 842+frameRange), new MidiParameters(5, 62, 60, false));
+
+    //Channel 6
+    videoPosToMidi.put(new Range(964, 964+frameRange), new MidiParameters(6, 60, 60, false));
+
+    //Channel 14
+    videoPosToMidi.put(new Range(1, 1+frameRange), new MidiParameters(14, 60, 60, false));
+    videoPosToMidi.put(new Range(120, 120+frameRange), new MidiParameters(14, 61, 60, false));
+    videoPosToMidi.put(new Range(212, 212+frameRange), new MidiParameters(14, 62, 60, false));
+    videoPosToMidi.put(new Range(305, 305+frameRange), new MidiParameters(14, 63, 60, false));
+    videoPosToMidi.put(new Range(401, 401+frameRange), new MidiParameters(14, 64, 60, false));
+
+    //Channel 15
+    videoPosToMidi.put(new Range(1, 1+frameRange), new MidiParameters(15, 59, 69, false));
+    videoPosToMidi.put(new Range(500, 500+frameRange), new MidiParameters(15, 60, 60, false));
+    videoPosToMidi.put(new Range(600, 600+frameRange), new MidiParameters(15, 61, 60, false));
+    videoPosToMidi.put(new Range(700, 700+frameRange), new MidiParameters(15, 62, 60, false));
+    videoPosToMidi.put(new Range(800, 800+frameRange), new MidiParameters(15, 63, 60, false));
+    videoPosToMidi.put(new Range(900, 900+frameRange), new MidiParameters(15, 64, 60, false));
+    videoPosToMidi.put(new Range(1000, 1000+frameRange), new MidiParameters(15, 65, 60, false));
+    videoPosToMidi.put(new Range(1100, 1100+frameRange), new MidiParameters(15, 66, 60, false));
+    videoPosToMidi.put(new Range(1200, 1200+frameRange), new MidiParameters(15, 67, 60, false));
+    videoPosToMidi.put(new Range(1300, 1300+frameRange), new MidiParameters(15, 68, 60, false));
+
+    //Channel 16
+    videoPosToMidi.put(new Range(10, 10+frameRange), new MidiParameters(16, 59, 69, false));
+    videoPosToMidi.put(new Range(510, 510+frameRange), new MidiParameters(16, 60, 60, false));
+    videoPosToMidi.put(new Range(610, 610+frameRange), new MidiParameters(16, 61, 60, false));
+    videoPosToMidi.put(new Range(710, 710+frameRange), new MidiParameters(16, 62, 60, false));
+    videoPosToMidi.put(new Range(810, 810+frameRange), new MidiParameters(16, 63, 60, false));
+    videoPosToMidi.put(new Range(910, 910+frameRange), new MidiParameters(16, 64, 60, false));
+    videoPosToMidi.put(new Range(1010, 1010+frameRange), new MidiParameters(16, 65, 60, false));
+    videoPosToMidi.put(new Range(1110, 1110+frameRange), new MidiParameters(16, 66, 60, false));
+    videoPosToMidi.put(new Range(1210, 1210+frameRange), new MidiParameters(16, 67, 60, false));
+    videoPosToMidi.put(new Range(1310, 1310+frameRange), new MidiParameters(16, 68, 60, false));
+  }
+  catch (Exception e) {
+    println("Error initializing MIDI: " + e.getMessage());
   }
 }
+
 
 void triggerNote() {
   long currentTime = millis();
 
-  for (Range range : videoPosToNote.keySet()) {
-    if (range.contains(videoPos) && !noteTriggered.get(range)) {
-      pitch = videoPosToNote.get(range);
+  // Loop through each range
+  for (Range range : videoPosToMidi.keySet()) {
+    MidiParameters params = videoPosToMidi.get(range);
+    String noteKey = params.channel + "-" + params.pitch;
+    boolean isActive = noteActive.getOrDefault(noteKey, false);
+    Long lastTrigger = lastNoteTriggerTime.getOrDefault(noteKey, 0L);
 
-      // Check if enough time has passed since the last note trigger
-      if (currentTime - lastNoteTriggerTime >= noteDuration) {
-        mb.sendNoteOn(channel, pitch, velocity);
-
-        // Update the timestamp of the last note trigger
-        lastNoteTriggerTime = currentTime;
-
-        // Set the flag to true to indicate that the note has been triggered for this range
-        noteTriggered.put(range, true);
+    if (range.contains(videoPos)) {
+      if (!isActive && currentTime - lastTrigger >= noteTimeout) {
+        // Entering the range for this note and timeout has elapsed
+        sendNoteOn(params);
+        noteActive.put(noteKey, true);
+        lastNoteTriggerTime.put(noteKey, currentTime); // Update last trigger time on note on
       }
-      break; // Exit the loop after triggering the first matching range
-    } else if (!range.contains(videoPos)) {
-      // Reset the flag if videoPos is outside the current range
-      noteTriggered.put(range, false);
+    } else if (isActive) {
+      // Exiting the range for this note
+      sendNoteOff(params);
+      noteActive.put(noteKey, false);
+      lastNoteTriggerTime.put(noteKey, currentTime); // Update last trigger time on note off
     }
+  }
+  prevVideoPos = videoPos;
+}
+
+
+void sendNoteOn(MidiParameters params) {
+  try {
+    mb.sendNoteOn(params.channel, params.pitch, params.velocity);
+    channel =params.channel;
+    pitch =params.pitch;
+    velocity = params.velocity;
+    println("FRAME: " + videoPos+ " Note ON: Channel " + params.channel + ", Pitch " + params.pitch + ", Velocity " + params.velocity);
+  }
+  catch (Exception e) {
+    println("Error sending Note On: " + e.getMessage());
+  }
+}
+
+void sendNoteOff(MidiParameters params) {
+  try {
+    mb.sendNoteOff(params.channel, params.pitch, 0);
+    //println("Note OFF: Channel " + params.channel + ", Pitch " + params.pitch);
+  }
+  catch (Exception e) {
+    println("Error sending Note Off: " + e.getMessage());
   }
 }

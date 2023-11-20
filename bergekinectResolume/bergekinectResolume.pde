@@ -79,87 +79,145 @@ void setup() {
 }
 
 void draw() {
-  img.loadPixels();
-  drawMenu();
-
+  updateImage();
   if (!testMode) {
     getDepth();
   }
+  processDepthData();
 
+  updateVideoPositionBasedOnDepth();
+  checkIdleAndIntroStates();
+
+  sendOscillationCommands();
+}
+
+void updateImage() {
+  img.loadPixels();
+  drawMenu();
   img.updatePixels();
+}
+
+void processDepthData() {
   smooth(closestValue);
 
-  if (average >= minDepth) {
-    if (average > roomDepth) {
-      videoPos = 0;
-      sound = 0;
-      mb.sendNoteOn(channel, pitch, sound);
-    } else {
-      videoPos = int(map(average, roomDepth, minDepth, 0, frames));
-      triggerNote();
-      checkDirection(average);
-    }
-  }
-
-  if (videoPos >= frames - idleFrames) {
-    nearStart = true;
-  } else if (videoPos <= frames - idleFrames) {
-    nearStart = false;
-  }
-
-  if (videoPos <= introLength) {
-    nearEnd = true;
-  } else if (videoPos >= introLength) {
-    nearEnd = false;
-  }
-
-  if (videoPos > 1 && main && !nearStart) {
-    finishIntro = false;
-    sendOsc(videoPos);
+  if (average >= minDepth && average <= roomDepth) {
+    videoPos = int(map(average, roomDepth, minDepth, 0, frames));
+    checkDirection(average);
   } else {
-    if (nearStart) {
-      // idle function
-      current = count(current, frames - idleFrames+1, frames);
-      videoPos = int(current);
-      sendOsc(int(current));
+    if (nearEnd) {
+      average = 0;
     }
-  }
-
-  if (nearEnd || finishIntro) {
-    main = false;
-    finishIntro = true;
-    if (intros == 0) {
-      current = count(current, startIntro1, EndIntro1);
-      videoPos = current;
-    }
-    if (intros == 1) {
-      current = count(current, startIntro2, EndIntro2);
-      videoPos = current;
-    }
-
-    if (intros == 2) {
-      current = count(current, startIntro3, EndIntro3);
-      videoPos = current;
-    }
-    if (intros == 3) {
-      current = count(current, startIntro4, EndIntro4);
-      videoPos = current;
-    }
-    if (intros == 4) {
-      current = count(current, startIntro5, EndIntro5);
-      videoPos = current;
-    }
-
-    sendOsc(current);
-    if (current == EndIntro1 || current == EndIntro2 || current == EndIntro3 || current == EndIntro4 || current == EndIntro5) {
-      main = true;
-      int[] introArray = {0, 1, 0, 2, 0, 3, 0, 4};
-      int randomIndex = int(random(0, introArray.length));
-      intros = introArray[randomIndex];
+    if (main)  {
+      videoPos= 0;
     }
   }
 }
 
+void updateVideoPositionBasedOnDepth() {
+  // Reset all states
+  main = false;
+  nearEnd = false;
+  nearStart = false;
+
+  if (videoPos >= frames - idleFrames) {
+    // When the video position is near the start (i.e., in the idle frames)
+    nearStart = true;
+  } else if (videoPos <= introLength) {
+    // When the video position is near the end (i.e., in the intro frames)
+    nearEnd = true;
+  } else {
+    // In all other cases, we are in the main part of the video
+    main = true;
+  }
+}
+
+void checkIdleAndIntroStates() {
+  if (videoPos > 1 && main && !nearStart) {
+    finishIntro = false;
+  } else if (nearStart) {
+    idleFunction();
+  }
+
+  if (nearEnd || finishIntro) {
+    handleIntroAnimation();
+  }
+}
+
+void idleFunction() {
+  current = count(current, frames - idleFrames + 1, frames);
+  videoPos = int(current);
+}
+
+void handleIntroAnimation() {
+  if (nearEnd) {
+    intros = updateIntroSequence(intros);
+    videoPos = current;
+    main = false;
+  } else {
+    fastCountToEndOfCurrentIntro();
+    fastCountToUserPosition();
+    main = true;
+    nearEnd = false;
+  }
+}
+
+int updateIntroSequence(int introStage) {
+  int[] introPoints = new int[]{startIntro1, EndIntro1, startIntro2, EndIntro2, startIntro3, EndIntro3, startIntro4, EndIntro4, startIntro5, EndIntro5};
+  current = count(current, introPoints[introStage * 2], introPoints[introStage * 2 + 1]);
+
+  if (current == introPoints[introStage * 2 + 1]) {
+    main = true;
+    int[] introArray = {0, 1, 0, 2, 0, 3, 0, 4};
+    int randomIndex = int(random(0, introArray.length));
+    return introArray[randomIndex];
+  }
+  return introStage;
+}
+
+void sendOscillationCommands() {
+  sendOsc(videoPos);
+  triggerNote();
+}
+
+void fastCountToEndOfCurrentIntro() {
+  int[] introEndPoints = new int[]{EndIntro1, EndIntro2, EndIntro3, EndIntro4, EndIntro5};
+  int endOfCurrentIntro = introEndPoints[intros];
+
+  // Define the speed of counting, higher value for faster counting
+  int countSpeed = 10;
+
+  // Fast count to the end of the current intro
+  while (current < endOfCurrentIntro) {
+    current += countSpeed;
+    if (current >= endOfCurrentIntro) {
+      current = endOfCurrentIntro;
+      break;
+    }
+  }
+
+  videoPos = current;
+}
+
+void fastCountToUserPosition() {
+  int userPosition = int(map(average, roomDepth, minDepth, 0, frames));
+  int countSpeed = 10; // Define the speed of counting
+
+  while (current != userPosition) {
+    if (current < userPosition) {
+      current += countSpeed;
+      if (current > userPosition) {
+        current = userPosition;
+      }
+    } else if (current > userPosition) {
+      current -= countSpeed;
+      if (current < userPosition) {
+        current = userPosition;
+      }
+    }
+
+    videoPos = current;
+  }
+}
 
 int count(int current, int start, int end) {
   current = (current - start + 1) % (end - start + 1) + start;
@@ -187,15 +245,6 @@ void smooth(int sum) {
   average = total / numReadings;
 }
 
-/*
-// function to idle first and last few frames
- float idle(int speed, int start, int end ) {
- position+=speed;
- float oscillation = (sin(position/100.0)+1)/2;
- float value = start + (end-start)*oscillation;
- //println(int(value));
- return int(value);
- }*/
 
 void checkDirection(int currentValue) {
   if (abs(currentValue - prevValue) > threshold) {

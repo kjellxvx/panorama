@@ -81,18 +81,13 @@ void drawMenu() {
   text("Animation:", 20, wH + 100);
 
 
-  if (main == false ) {
-    if (nearStart == false) {
-      text("Intro", 120, wH + 100);
-      text(intros+1, 170, wH + 100);
-    }
-  }
-  if (videoPos > 1 && main && !nearStart) {
+  if (main && !nearStart && !nearEnd) {
     text("Main", 120, wH + 100);
-  } else {
-    if (nearStart) {
-      text("Outro", 120, wH + 100);
-    }
+  } else if (!main && !nearStart) {
+    text("Intro", 120, wH + 100);
+    text(intros + 1, 170, wH + 100);
+  } else if (nearStart) {
+    text("Outro", 120, wH + 100);
   }
 
 
