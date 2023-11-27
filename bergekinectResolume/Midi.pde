@@ -44,7 +44,7 @@ class Range {
 int channel = 0;
 int pitch = 0;
 int velocity = 60;
-int frameRange = 3;
+int frameRange = 10;
 
 
 int prevVideoPos = -1;
