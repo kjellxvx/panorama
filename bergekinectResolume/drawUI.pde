@@ -163,11 +163,11 @@ void drawMenu() {
   // draw direction arrows
   fill(255, 0, 0);
   noStroke();
-  if (direction.equals("forwards")) {
+  if (direction.equals("backwards")) {
     triangle(480, wH + statsHeight / 2, 490, wH + 50 + statsHeight / 2, 500, wH + statsHeight / 2);
     // triangle(480, 212, 490, 262, 500, 212);
   }
-  if (direction.equals("backwards")) {
+  if (direction.equals("forwards")) {
     triangle(480, wH + statsHeight / 2, 490, wH - 50 + statsHeight / 2, 500, wH + statsHeight / 2);
   }
 }

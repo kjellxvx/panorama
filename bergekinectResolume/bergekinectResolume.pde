@@ -249,9 +249,9 @@ void smooth(int sum) {
 void checkDirection(int currentValue) {
   if (abs(currentValue - prevValue) > threshold) {
     if (currentValue > prevValue) {
-      direction = "forwards";
-    } else {
       direction = "backwards";
+    } else {
+      direction = "forwards";
     }
   } else {
     direction = "idle";
