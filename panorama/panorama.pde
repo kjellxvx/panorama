@@ -35,6 +35,7 @@ int videoPos;
 int sound;
 
 // For idle mode
+boolean nearStartActivated = false;
 boolean nearEnd = false;
 boolean nearStart = false;
 boolean introAnimation = false;
@@ -107,29 +108,46 @@ void processDepthData() {
     if (nearEnd) {
       average = 0;
     }
-    if (main)  {
+    if (main) {
       videoPos= 0;
     }
   }
 }
 
 void updateVideoPositionBasedOnDepth() {
-  // Reset all states
-  main = false;
-  nearEnd = false;
-  nearStart = false;
-
-  if (videoPos >= frames - idleFrames) {
-    // When the video position is near the start (i.e., in the idle frames)
+  // Check if the user has activated nearStart mode
+  if (nearStartActivated) {
+    // If nearStart mode is activated, stay in nearStart mode regardless of videoPos
+    main = false;
+    nearEnd = false;
     nearStart = true;
-  } else if (videoPos <= introLength) {
-    // When the video position is near the end (i.e., in the intro frames)
-    nearEnd = true;
+
+    // Check if the user has moved to the range of 1350 to 1360
+    if (videoPos >= frames - idleFrames-100 && videoPos <= frames - idleFrames) {
+      // Disable nearStart mode if the user is in the specified range
+      nearStartActivated = false;
+    }
   } else {
-    // In all other cases, we are in the main part of the video
-    main = true;
+    // Reset all states
+    main = false;
+    nearEnd = false;
+    nearStart = false;
+
+    // Check if videoPos is within the nearStart range
+    if (videoPos <= introLength) {
+      // When the video position is near the end (i.e., in the intro frames)
+      nearEnd = true;
+    } else if (videoPos >= frames - idleFrames) {
+      // When the video position is near the start (i.e., in the idle frames)
+      nearStart = true;
+      nearStartActivated = true;  // Activate nearStart mode
+    } else {
+      // In all other cases, we are in the main part of the video
+      main = true;
+    }
   }
 }
+
 
 void checkIdleAndIntroStates() {
   if (videoPos > 1 && main && !nearStart) {

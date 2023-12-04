@@ -105,12 +105,12 @@ void initMidi() {
     videoPosToMidi.put(new Range(950, 950+frameRange), new MidiParameters(6, 62, 60, false));
     videoPosToMidi.put(new Range(1033, 1033+frameRange), new MidiParameters(6, 63, 60, false));
     videoPosToMidi.put(new Range(1107, 1107+frameRange), new MidiParameters(6, 64, 60, false));
-    videoPosToMidi.put(new Range(1156, 1156+frameRange), new MidiParameters(6, 65, 60, false));
-    videoPosToMidi.put(new Range(1216, 1216+frameRange), new MidiParameters(6, 66, 60, false));
+    videoPosToMidi.put(new Range(1156, 1204), new MidiParameters(6, 65, 60, false));
+    videoPosToMidi.put(new Range(1216, 1250), new MidiParameters(6, 66, 60, false));
     videoPosToMidi.put(new Range(1351, 1351+frameRange), new MidiParameters(6, 67, 60, false));
-    videoPosToMidi.put(new Range(1215, 1215+frameRange), new MidiParameters(6, 68, 60, false));
+    videoPosToMidi.put(new Range(1215, 1244), new MidiParameters(6, 68, 60, false));
     videoPosToMidi.put(new Range(1229, 1229+frameRange), new MidiParameters(6, 69, 60, false));
-    videoPosToMidi.put(new Range(1260, 1260+frameRange), new MidiParameters(6, 70, 60, false));
+    videoPosToMidi.put(new Range(1260, 1277), new MidiParameters(6, 70, 60, false));
     videoPosToMidi.put(new Range(1266, 1266+frameRange), new MidiParameters(6, 71, 60, false));
     videoPosToMidi.put(new Range(1279, 1279+frameRange), new MidiParameters(6, 72, 60, false));
     videoPosToMidi.put(new Range(1310, 1310+frameRange), new MidiParameters(6, 73, 60, false));
