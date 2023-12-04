@@ -206,7 +206,15 @@ void sendNoteOn(MidiParameters params) {
 
 void sendNoteOff(MidiParameters params) {
   try {
-    mb.sendNoteOff(params.channel, params.pitch, 0);
+
+    if (direction.equals("backwards")) {
+      mb.sendNoteOff(params.channel, (params.pitch + 20), 0);
+    } else {
+      mb.sendNoteOff(params.channel, params.pitch, 0);
+    }
+
+
+
     //println("Note OFF: Channel " + params.channel + ", Pitch " + params.pitch);
   }
   catch (Exception e) {
