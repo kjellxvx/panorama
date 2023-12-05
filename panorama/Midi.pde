@@ -163,7 +163,7 @@ void triggerNote() {
     Long lastTrigger = lastNoteTriggerTime.getOrDefault(noteKey, 0L);
 
     if (range.contains(videoPos)) {
-      if (!isActive && currentTime - lastTrigger >= noteTimeout && !isMoving) {
+      if (!isActive && currentTime - lastTrigger >= noteTimeout && isMoving) {
         // Entering the range for this note and timeout has elapsed
         sendNoteOn(params);
         noteActive.put(noteKey, true);
