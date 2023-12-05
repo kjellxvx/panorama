@@ -60,6 +60,11 @@ int prevValue = 0;
 String direction = "idle";
 int threshold = 5 ;
 
+boolean isMoving = true;
+int prevValueForMovementCheck;
+int thresholdForMovementCheck = 2;
+int lastUpdateTime;
+
 void setup() {
 
   loadSettings();
@@ -104,6 +109,7 @@ void processDepthData() {
   if (average >= minDepth && average <= roomDepth) {
     videoPos = int(map(average, roomDepth, minDepth, 0, frames));
     checkDirection(average);
+    detectMovement(average);
   } else {
     if (nearEnd) {
       average = 0;
@@ -195,6 +201,10 @@ int updateIntroSequence(int introStage) {
 void sendOscillationCommands() {
   sendOsc(videoPos);
   triggerNote();
+
+  if (!isMoving) {
+    abortNote();
+  }
 }
 
 void fastCountToEndOfCurrentIntro() {
@@ -275,4 +285,22 @@ void checkDirection(int currentValue) {
     direction = "idle";
   }
   prevValue = currentValue;
+}
+
+void detectMovement(int currentValue) {
+  int currentTime = millis();
+
+  if (main) {
+    if (currentTime - lastUpdateTime >= 500) { // Check if 0.5 second has elapsed
+      if (abs(currentValue - prevValueForMovementCheck) <= thresholdForMovementCheck) {
+        isMoving = false;
+      } else {
+        isMoving = true;
+      }
+      prevValueForMovementCheck = currentValue;
+      lastUpdateTime = currentTime;
+    }
+  } else {
+    isMoving = true;
+  }
 }

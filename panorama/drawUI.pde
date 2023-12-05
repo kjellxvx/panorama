@@ -70,16 +70,9 @@ void drawMenu() {
   text(velocity, 390, wH + 75);
   text("Velocity", 435, wH + 75);
 
-  //textSize(50);
-  //text(pitch, 410, wH + 45);
-  //textSize(20);
-
-
-
   fill(0, 0, 0);
   textSize(20);
   text("Animation:", 20, wH + 100);
-
 
   if (main && !nearStart && !nearEnd) {
     text("Main", 120, wH + 100);
@@ -90,6 +83,13 @@ void drawMenu() {
     text("Outro", 120, wH + 100);
   }
 
+  if (isMoving) {
+    fill(0, 255, 0);
+    text("Moving", 20, wH + 120);
+  } else {
+    fill(255, 0, 0);
+    text("Still", 20, wH + 120);
+  }
 
   stroke(0);
   fill(255, 0, 0);
