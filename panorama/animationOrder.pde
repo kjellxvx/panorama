@@ -3,7 +3,7 @@ int frames = 1414;
 
 int lenghtIntro1 = 120;
 int lenghtIntro2 = 92;
-int lenghtIntro3 = 93;
+int lenghtIntro3 = 92;
 int lenghtIntro4 = 96;
 int lenghtIntro5 = 99;
 
@@ -13,16 +13,16 @@ int idleFrames = 24;
 int introLength = lenghtIntro1+lenghtIntro2+lenghtIntro3+lenghtIntro4+lenghtIntro5;
 
 int startIntro1 = 0;
-int EndIntro1 = lenghtIntro1;
+int EndIntro1 = 119;
 
-int startIntro2 = EndIntro1 + 1;
-int EndIntro2 = startIntro2 + lenghtIntro2;
+int startIntro2 = 120;
+int EndIntro2 = 211;
 
-int startIntro3 = EndIntro2 + 1;
-int EndIntro3 = startIntro3 + lenghtIntro3;
+int startIntro3 = 212;
+int EndIntro3 = 304;
 
-int startIntro4 = EndIntro3 + 1;
-int EndIntro4 = startIntro4 + lenghtIntro4;
+int startIntro4 = 305;
+int EndIntro4 = 400;
 
-int startIntro5 = EndIntro4 + 1;
-int EndIntro5 = startIntro5 + lenghtIntro5;
+int startIntro5 = 401;
+int EndIntro5 = 499;

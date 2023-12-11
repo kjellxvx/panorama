@@ -58,7 +58,7 @@ int prevValue = 0;
 
 // Boolean and string for direction
 String direction = "idle";
-int threshold = 5 ;
+int threshold = 1 ;
 
 boolean isMoving = true;
 int prevValueForMovementCheck;
@@ -90,10 +90,8 @@ void draw() {
     getDepth();
   }
   processDepthData();
-
   updateVideoPositionBasedOnDepth();
   checkIdleAndIntroStates();
-
   sendOscillationCommands();
 }
 
@@ -105,19 +103,9 @@ void updateImage() {
 
 void processDepthData() {
   smooth(closestValue);
-
-  if (average >= minDepth && average <= roomDepth) {
-    videoPos = int(map(average, roomDepth, minDepth, 0, frames));
-    checkDirection(average);
-    detectMovement(average);
-  } else {
-    if (nearEnd) {
-      average = 0;
-    }
-    if (main) {
-      videoPos= 0;
-    }
-  }
+  videoPos = int(map(average, roomDepth, minDepth, introLength, frames-idleFrames));
+  checkDirection(average);
+  detectMovement(average);
 }
 
 void updateVideoPositionBasedOnDepth() {
@@ -129,7 +117,7 @@ void updateVideoPositionBasedOnDepth() {
     nearStart = true;
 
     // Check if the user has moved to the range of 1350 to 1360
-    if (videoPos >= frames - idleFrames-100 && videoPos <= frames - idleFrames) {
+    if (average >= 500 && average < 1000) {
       // Disable nearStart mode if the user is in the specified range
       nearStartActivated = false;
     }
@@ -140,10 +128,10 @@ void updateVideoPositionBasedOnDepth() {
     nearStart = false;
 
     // Check if videoPos is within the nearStart range
-    if (videoPos <= introLength) {
+    if (average >= 4000) {
       // When the video position is near the end (i.e., in the intro frames)
       nearEnd = true;
-    } else if (videoPos >= frames - idleFrames) {
+    } else if (average <= 600) {
       // When the video position is near the start (i.e., in the idle frames)
       nearStart = true;
       nearStartActivated = true;  // Activate nearStart mode
@@ -168,6 +156,7 @@ void checkIdleAndIntroStates() {
 }
 
 void idleFunction() {
+  direction = "forwards";
   current = count(current, frames - idleFrames + 1, frames);
   videoPos = int(current);
 }
@@ -177,15 +166,11 @@ void handleIntroAnimation() {
     intros = updateIntroSequence(intros);
     videoPos = current;
     main = false;
-  } else {
-    fastCountToEndOfCurrentIntro();
-    fastCountToUserPosition();
-    main = true;
-    nearEnd = false;
   }
 }
 
 int updateIntroSequence(int introStage) {
+  direction = "forwards";
   int[] introPoints = new int[]{startIntro1, EndIntro1, startIntro2, EndIntro2, startIntro3, EndIntro3, startIntro4, EndIntro4, startIntro5, EndIntro5};
   current = count(current, introPoints[introStage * 2], introPoints[introStage * 2 + 1]);
 
@@ -207,45 +192,6 @@ void sendOscillationCommands() {
   }
 }
 
-void fastCountToEndOfCurrentIntro() {
-  int[] introEndPoints = new int[]{EndIntro1, EndIntro2, EndIntro3, EndIntro4, EndIntro5};
-  int endOfCurrentIntro = introEndPoints[intros];
-
-  // Define the speed of counting, higher value for faster counting
-  int countSpeed = 10;
-
-  // Fast count to the end of the current intro
-  while (current < endOfCurrentIntro) {
-    current += countSpeed;
-    if (current >= endOfCurrentIntro) {
-      current = endOfCurrentIntro;
-      break;
-    }
-  }
-
-  videoPos = current;
-}
-
-void fastCountToUserPosition() {
-  int userPosition = int(map(average, roomDepth, minDepth, 0, frames));
-  int countSpeed = 10; // Define the speed of counting
-
-  while (current != userPosition) {
-    if (current < userPosition) {
-      current += countSpeed;
-      if (current > userPosition) {
-        current = userPosition;
-      }
-    } else if (current > userPosition) {
-      current -= countSpeed;
-      if (current < userPosition) {
-        current = userPosition;
-      }
-    }
-
-    videoPos = current;
-  }
-}
 
 int count(int current, int start, int end) {
   current = (current - start + 1) % (end - start + 1) + start;
@@ -271,6 +217,9 @@ void smooth(int sum) {
 
   // calculate the average:
   average = total / numReadings;
+  if (average > 4000) {
+    average = 4000;
+  }
 }
 
 
@@ -289,9 +238,8 @@ void checkDirection(int currentValue) {
 
 void detectMovement(int currentValue) {
   int currentTime = millis();
-
   if (main) {
-    if (currentTime - lastUpdateTime >= 500) { // Check if 0.5 second has elapsed
+    if (currentTime - lastUpdateTime >= 200) { // Check if 0.5 second has elapsed
       if (abs(currentValue - prevValueForMovementCheck) <= thresholdForMovementCheck) {
         isMoving = false;
       } else {
